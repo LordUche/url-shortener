@@ -98,7 +98,7 @@ app.use((error, req, res, next) => {
 })
 
 const PORT = process.env.PORT || 1337
-app.listen(PORT, () => console.log('🚀 App started on port', PORT))
+const server = app.listen(PORT, () => console.log('🚀 App started on port', PORT))
 
 process.on('unhandledRejection', (err) => {
   console.error('UNHANDLED REJECTION 💥 Shutting down server...')
