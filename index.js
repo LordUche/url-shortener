@@ -10,6 +10,12 @@ const xss = require('xss-clean')
 const yup = require('yup')
 const { nanoid } = require('nanoid')
 
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION 💥 Shutting down server...')
+  console.error(`${err.name}:`, err)
+  process.exit(1)
+})
+
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -93,3 +99,14 @@ app.use((error, req, res, next) => {
 
 const PORT = process.env.PORT || 1337
 app.listen(PORT, () => console.log('🚀 App started on port', PORT))
+
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION 💥 Shutting down server...')
+  console.error(`${err.name}:`, err)
+  server.close(() => process.exit(1))
+})
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM SIGNAL RECEIVED 👋 Shutting down gracefully...')
+  server.close(() => console.log('💥 Process terminated!'))
+})
