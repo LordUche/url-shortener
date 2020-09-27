@@ -5,7 +5,8 @@ const helmet = require('helmet')
 const compression = require('compression')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
-const mongoSanitize = require('mongo-sanitize')
+const mongoSanitize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
 const yup = require('yup')
 const { nanoid } = require('nanoid')
 
@@ -49,6 +50,7 @@ app.use(helmet())
 app.use(compression())
 app.use(express.json())
 app.use(mongoSanitize())
+app.use(xss())
 if (app.get('env') === 'development') app.use(morgan('tiny'))
 
 app.get('/:slug', async (req, res, next) => {
