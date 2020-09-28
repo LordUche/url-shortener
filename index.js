@@ -91,6 +91,7 @@ app.use((error, req, res, next) => {
   if (error.name === 'MongoError' && error.code === 11000) {
     error.message = 'Slug is taken'
   }
+  console.log(error)
   res.json({
     message: error.message,
     stack: app.get('env') === 'development' ? error.stack : undefined
