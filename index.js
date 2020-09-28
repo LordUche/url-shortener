@@ -29,7 +29,7 @@ const schema = yup.object().shape({
   slug: yup
     .string()
     .trim()
-    .matches(/[a-zA-Z0-9_-]/)
+    .matches(/^[a-zA-Z0-9_-]*$/, 'Slugs can only contain letters, numbers, underscores and hyphens')
     .lowercase()
     .nullable(),
   url: yup.string().url().required()
@@ -57,7 +57,7 @@ app.use(compression())
 app.use(express.json())
 app.use(mongoSanitize())
 app.use(xss())
-if (app.get('env') === 'development') app.use(morgan('tiny'))
+if (app.get('env') === 'development') app.use(morgan('dev'))
 
 app.get('/:slug', async (req, res, next) => {
   try {
