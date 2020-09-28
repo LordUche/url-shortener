@@ -29,7 +29,7 @@ const schema = yup.object().shape({
   slug: yup
     .string()
     .trim()
-    .matches(/^[a-zA-Z0-9_-]*$/, 'Slugs can only contain letters, numbers, underscores and hyphens')
+    .matches(/^[a-zA-Z0-9_-]*$/, 'Slug can only contain letters, numbers, underscores and hyphens')
     .lowercase()
     .nullable(),
   url: yup.string().url().required()
@@ -89,7 +89,10 @@ app.post('/url', async (req, res, next) => {
 app.use((error, req, res, next) => {
   error.status ? res.status(error.status) : res.status(500)
   if (error.name === 'MongoError' && error.code === 11000) {
+    res.status(409)
     error.message = 'Slug is taken'
+  } else if (error.name === 'ValidationError') {
+    res.status(400)
   }
   console.log(error)
   res.json({
